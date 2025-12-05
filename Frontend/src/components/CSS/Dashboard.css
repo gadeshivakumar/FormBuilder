@@ -1,0 +1,59 @@
+.dashboard-container {
+  max-width: 800px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  padding: 10px;
+}
+
+.profile-box,
+.create-form-box,
+.form-item {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  background: #fafafa;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+.btn {
+  padding: 10px 16px;
+  background-color: #0070f3;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #005fcc;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.btn-small:hover {
+  background-color: #005fcc;
+}
+
+.btn-small.secondary {
+  background-color: #555;
+}
+
+.btn-small.secondary:hover {
+  background-color: #333;
+}
+
+.form-actions {
+  margin-top: 10px;
+}

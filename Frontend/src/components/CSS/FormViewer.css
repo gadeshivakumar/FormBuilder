@@ -1,0 +1,62 @@
+.formviewer-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.formviewer-container h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+
+.form-question {
+  margin-bottom: 16px;
+}
+
+
+.form-question label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #444;
+}
+
+
+.form-question input[type="text"],
+.form-question input[type="number"],
+.form-question select,
+.form-question textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 4px;
+  box-sizing: border-box;
+}
+
+
+.form-question label input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+
+.submit-btn {
+  padding: 10px 20px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #005fcc;
+}
+
+
+.status-text {
+  margin-top: 12px;
+  font-weight: bold;
+}

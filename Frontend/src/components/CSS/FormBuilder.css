@@ -1,0 +1,59 @@
+.formbuilder-container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+
+.formbuilder-container h2,
+.formbuilder-container h4 {
+  margin-bottom: 12px;
+  color: #333;
+}
+
+.formbuilder-container select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+
+.fields-list label {
+  display: block;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+
+.question-box {
+  border: 1px solid #ddd;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background: #fafafa;
+}
+
+
+.question-box input[type="text"],
+.question-box input[type="checkbox"] {
+  margin-top: 6px;
+}
+
+
+.save-btn {
+  margin-top: 16px;
+  padding: 10px 20px;
+  background-color: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background-color: #005fcc;
+}

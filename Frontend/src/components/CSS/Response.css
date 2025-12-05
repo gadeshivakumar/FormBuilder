@@ -1,0 +1,32 @@
+.resp-wrap {
+  padding: 20px;
+}
+
+.resp-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.resp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.resp-table th,
+.resp-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: top;
+}
+
+.resp-table pre {
+  margin: 0;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+
+.resp-table tr:nth-child(even) {
+  background: #fafafa;
+}
