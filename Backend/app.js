@@ -46,6 +46,45 @@ function cookieOptions() {
   };
 }
 
+function validateAnswers(form, answers) {
+  for (const q of form.questions) {
+    const val = answers[q.questionKey];
+    const isVisible = true;
+    if (!isVisible) continue;
+
+    if (q.required) {
+      if (
+        val === undefined ||
+        val === null ||
+        val === "" ||
+        (Array.isArray(val) && val.length === 0)
+      ) {
+        return `${q.label} is required`;
+      }
+    }
+
+    if (q.type.toLowerCase().includes("singleselect")) {
+      const choices = q.options?.choices?.map((c) => c.name) || [];
+      if (val && !choices.includes(val)) {
+        return `${q.label}: invalid value`;
+      }
+    }
+
+    if (q.type.toLowerCase().includes("multipleselect")) {
+      const choices = q.options?.choices?.map((c) => c.name) || [];
+      if (
+        Array.isArray(val) &&
+        val.some((v) => !choices.includes(v))
+      ) {
+        return `${q.label}: invalid value in multi-select`;
+      }
+    }
+  }
+
+  return null;
+}
+
+
 app.get("/auth/airtable/start", (req, res) => {
   const redirectUri = process.env.AIRTABLE_REDIRECT_URI;
   const codeVerifier = crypto.randomBytes(32).toString("hex");
@@ -266,6 +305,10 @@ app.post("/forms/:id/submit", async (req, res) => {
     const form = await Form.findById(req.params.id).lean();
     if (!form) return res.status(404).send({ error: "Form not found" });
 
+    const errorMsg = validateAnswers(form, answers);
+
+    if (errorMsg) return res.status(400).send({ error: errorMsg });
+
     const accessToken = await getValidToken(form.ownerAirtableUserId);
 
     const fieldsObj = {};
@@ -302,6 +345,7 @@ app.post("/forms/:id/submit", async (req, res) => {
     return res.status(500).send({ error: "Failed to submit form" });
   }
 });
+
 
 app.get("/forms/:id/responses", async (req, res) => {
   try {
@@ -371,6 +415,48 @@ app.get("/forms", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch forms" });
   }
 });
+
+app.post("/webhooks/airtable", async (req, res) => {
+  try {
+    const body = req.body;
+    if (!body || !Array.isArray(body.events)) {
+      return res.send({ ok: true });
+    }
+
+    for (const evt of body.events) {
+      const { baseId, tableId, recordId, changedFields, op } = evt;
+
+      const form = await Form.findOne({ baseId, tableId }).lean();
+      if (!form) continue;
+
+      if (op === "delete") {
+        await ResponseModel.findOneAndUpdate(
+          { airtableRecordId: recordId },
+          { deletedInAirtable: true }
+        );
+        continue;
+      }
+
+      if (op === "update") {
+        const updated = {};
+        for (const f of changedFields) {
+          updated[`data.${f.fieldName}`] = f.newValue;
+        }
+
+        await ResponseModel.findOneAndUpdate(
+          { airtableRecordId: recordId },
+          { $set: updated }
+        );
+      }
+    }
+
+    res.send({ ok: true });
+  } catch (err) {
+    console.log("Webhook sync failed:", err.message);
+    res.send({ ok: true });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log("Server running on", PORT));
