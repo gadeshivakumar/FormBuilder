@@ -15,14 +15,14 @@ export default function FormBuilder() {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/auth/airtable/bases", { credentials: "include" })
+    fetch("https://form-builder-backend-u2m6.onrender.com/auth/airtable/bases", { credentials: "include" })
       .then((r) => r.json())
       .then((d) => setBases(d.bases || []))
       .catch(() => (window.location.href = "/"));
   }, []);
 
   const fetchTables = (id) => {
-    fetch(`http://localhost:5000/auth/airtable/tables?base=${id}`, { credentials: "include" })
+    fetch(`https://form-builder-backend-u2m6.onrender.com/auth/airtable/tables?base=${id}`, { credentials: "include" })
       .then((r) => r.json())
       .then((d) => setTables(d.tables || []));
   };
@@ -96,7 +96,7 @@ export default function FormBuilder() {
       })),
     };
 
-    const res = await fetch("http://localhost:5000/forms", {
+    const res = await fetch("https://form-builder-backend-u2m6.onrender.com/forms", {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

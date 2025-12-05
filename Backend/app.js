@@ -16,7 +16,7 @@ const app = express();
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: false }));
-
+app.set("trust proxy", 1);
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
 
 const corsOrigins = [FRONTEND_ORIGIN, "https://airtable.com"];
@@ -309,7 +309,13 @@ app.post("/forms/:id/submit", async (req, res) => {
 
     if (errorMsg) return res.status(400).send({ error: errorMsg });
 
-    const accessToken = await getValidToken(form.ownerAirtableUserId);
+    let accessToken;
+      try {
+        accessToken = await getValidToken(form.ownerAirtableUserId);
+      } catch (err) {
+        console.error("TOKEN REFRESH ERR:", err);
+        return res.status(401).send({ error: "Authentication expired, reconnect Airtable" });
+      }
 
     const fieldsObj = {};
     form.questions.forEach((q) => {
@@ -359,10 +365,6 @@ app.get("/forms/:id/responses", async (req, res) => {
   }
 });
 
-app.post("/webhooks/airtable", (req, res) => {
-  console.log("AIRTABLE WEBHOOK EVENT:", req.body);
-  res.send({ ok: true });
-});
 
 app.get("/search/forms", async (req, res) => {
   try {
@@ -386,23 +388,45 @@ app.get("/forms", async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
 
     if (new Date() > user.tokenExpiresAt) {
+      // const params = new URLSearchParams({
+      //   grant_type: "refresh_token",
+      //   refresh_token: user.refreshToken,
+      //   client_id: process.env.AIRTABLE_CLIENT_ID,
+      //   client_secret: process.env.AIRTABLE_CLIENT_SECRET,
+      // });
+
+      // const refreshResponse = await axios.post(
+      //   "https://airtable.com/oauth2/v1/token",
+      //   params.toString(),
+      //   { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
+      // );
+
       const params = new URLSearchParams({
         grant_type: "refresh_token",
         refresh_token: user.refreshToken,
-        client_id: process.env.AIRTABLE_CLIENT_ID,
-        client_secret: process.env.AIRTABLE_CLIENT_SECRET,
       });
 
       const refreshResponse = await axios.post(
         "https://airtable.com/oauth2/v1/token",
         params.toString(),
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-      );
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization:
+              "Basic " +
+              Buffer.from(
+                `${process.env.AIRTABLE_CLIENT_ID}:${process.env.AIRTABLE_CLIENT_SECRET}`
+              ).toString("base64")
+          }
+        }
+);
+
 
       user.accessToken = refreshResponse.data.access_token;
       user.refreshToken = refreshResponse.data.refresh_token ?? user.refreshToken;
       user.tokenExpiresAt = new Date(Date.now() + refreshResponse.data.expires_in * 1000);
       await user.save();
+
     }
 
     const airtableRes = await axios.get("https://api.airtable.com/v0/meta/whoami", {

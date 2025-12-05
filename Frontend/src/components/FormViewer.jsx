@@ -104,7 +104,7 @@ export default function FormViewer() {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    fetch(`http://localhost:5000/forms/${id}`)
+    fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}`)
       .then((r) => r.json())
       .then((d) => setForm(d))
       .catch(() => setForm(null));
@@ -128,7 +128,7 @@ export default function FormViewer() {
 
     setStatus("Submitting...");
 
-    const r = await fetch(`http://localhost:5000/forms/${id}/submit`, {
+    const r = await fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}/submit`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ answers }),

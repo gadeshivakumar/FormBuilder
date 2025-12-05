@@ -9,7 +9,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/auth/airtable/profile", {
+    fetch("https://form-builder-backend-u2m6.onrender.com/auth/airtable/profile", {
       credentials: "include",
     })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
@@ -20,7 +20,7 @@ function Dashboard() {
   useEffect(() => {
     if (!profile?.id) return;
 
-    fetch(`http://localhost:5000/search/forms?owner=${profile.id}`, {
+    fetch(`https://form-builder-backend-u2m6.onrender.com/search/forms?owner=${profile.id}`, {
       credentials: "include",
     })
       .then((r) => r.json())

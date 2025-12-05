@@ -7,7 +7,7 @@ export default function Responses() {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/forms/${id}/responses`, {
+    fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}/responses`, {
       credentials: "include",
     })
       .then((res) => res.json())

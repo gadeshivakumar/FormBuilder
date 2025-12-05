@@ -3,7 +3,7 @@ import "./CSS/Landing.css";
 
 const Landing = () => {
   const handleLogin = () => {
-    window.location.href = "http://localhost:5000/auth/airtable/start";
+    window.location.href = "https://form-builder-backend-u2m6.onrender.com/auth/airtable/start";
   };
 
   return (
