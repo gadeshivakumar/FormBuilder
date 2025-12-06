@@ -23,15 +23,14 @@ const corsOrigins = new Set([FRONTEND_ORIGIN, "https://airtable.com"]);
 
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin || corsOrigins.has(origin)) cb(null, true);
-      else cb(new Error("Not allowed by CORS"));
-    },
+    origin: [
+      "https://form-builder-pearl-one.vercel.app",
+      "http://localhost:5173",
+    ],
     credentials: true,
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
   })
 );
+
 
 
 
