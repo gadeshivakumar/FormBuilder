@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./CSS/Response.css";
-import { API } from "..utils/config";
+import { API } from "../utils/config";
 
 export default function Responses() {
   const { id } = useParams();

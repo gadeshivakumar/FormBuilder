@@ -1,6 +1,6 @@
 import React from "react";
 import "./CSS/Landing.css";
-import { API } from "..utils/config";
+import { API } from "../utils/config";
 const Landing = () => {
   const handleLogin = () => {
   window.location.href = `${API}/auth/airtable/start`;

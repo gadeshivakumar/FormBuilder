@@ -1,1 +1,1 @@
-export const API = "https://form-builder-backend-u2m6.onrender.com";
+export const API = "/api";

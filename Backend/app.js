@@ -18,16 +18,32 @@ app.use(bodyParser.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.set("trust proxy", 1);
 
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
-const corsOrigins = new Set([FRONTEND_ORIGIN, "https://airtable.com"]);
+
+const FRONTEND_ORIGIN = (process.env.FRONTEND_ORIGIN || "https://form-builder-pearl-one.vercel.app").replace(/\/$/, "");
 
 app.use(
   cors({
-    origin: ["https://form-builder-pearl-one.vercel.app",
-      "https://form-builder-backend-u2m6.onrender.com"],
+    origin: function (origin, callback) {
+      if (!origin || origin === FRONTEND_ORIGIN || origin === "https://airtable.com") {
+        return callback(null, true);
+      }
+      return callback(new Error("CORS policy: origin not allowed"));
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept", "X-Requested-With"]
   })
 );
+
+
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", req.header("Origin") || FRONTEND_ORIGIN);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept, X-Requested-With");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  return res.sendStatus(204);
+});
+
 
 
 
@@ -39,15 +55,14 @@ mongoose
   .catch((e) => console.error("Mongo connection error:", e));
 
 function cookieOptions() {
-  const isProd = process.env.NODE_ENV === "production";
-
   return {
     httpOnly: true,
-    secure: isProd, 
+    secure: true,    
     sameSite: "none",
     path: "/",
   };
 }
+
 
 
 function validateAnswers(form, answers) {
@@ -169,8 +184,9 @@ app.get("/auth/airtable/callback", async (req, res) => {
       { upsert: true }
     );
 
-    res.cookie("token", access_token, cookieOptions());
-    return res.redirect(`${FRONTEND_ORIGIN.replace(/\/$/, "")}/dashboard`);
+   res.cookie("token", access_token, cookieOptions());
+    return res.redirect(`${FRONTEND_ORIGIN}/dashboard`);
+
   } catch (err) {
     console.error("TOKEN ERROR:", err.response?.data || err);
     return res.status(500).send("Token exchange failed");

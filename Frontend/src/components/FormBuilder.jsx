@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/FormBuilder.css";
-import { API } from "..utils/config";
+import { API } from "../utils/config";
 
 export default function FormBuilder() {
   const nav = useNavigate();

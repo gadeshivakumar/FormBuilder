@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { shouldShowQuestion } from "../utils/logic";
 import "./CSS/FormViewer.css";
-import { API } from "..utils/config";
+import { API } from "../utils/config";
 
 const readFiles = (files) =>
   new Promise((resolve, reject) => {

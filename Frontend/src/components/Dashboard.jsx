@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/Dashboard.css";
-import { API } from "..utils/config";
+import { API } from "../utils/config";
 function Dashboard() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
