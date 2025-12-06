@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { shouldShowQuestion } from "../utils/logic";
 import "./CSS/FormViewer.css";
+import { API } from "..utils/config";
 
 const readFiles = (files) =>
   new Promise((resolve, reject) => {
@@ -104,7 +105,7 @@ export default function FormViewer() {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    fetch(`/api/forms/${id}`,{credentials:"include"})
+    fetch(`${API}/forms/${id}`,{credentials:"include"})
       .then((r) => r.json())
       .then((d) => setForm(d))
       .catch(() => setForm(null));
@@ -128,7 +129,7 @@ export default function FormViewer() {
 
     setStatus("Submitting...");
 
-    const r = await fetch(`/api/forms/${id}/submit`, {
+    const r = await fetch(`${API}/forms/${id}/submit`, {
       method: "POST",
       credentials:"include",
       headers: { "Content-Type": "application/json" },

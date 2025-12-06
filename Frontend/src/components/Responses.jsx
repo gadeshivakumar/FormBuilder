@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "./CSS/Response.css";
+import { API } from "..utils/config";
 
 export default function Responses() {
   const { id } = useParams();
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    fetch(`/api/forms/${id}/responses`, {
+    fetch(`${API}/forms/${id}/responses`, {
       credentials: "include",
     })
       .then((res) => res.json())

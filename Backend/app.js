@@ -26,11 +26,13 @@ app.use(
     origin: [
       "https://form-builder-pearl-one.vercel.app",
       "https://form-builder-backend-u2m6.onrender.com",
-      "http://localhost:5173",
+      "https://airtable.com",
+      "https://api.airtable.com",
     ],
     credentials: true,
   })
 );
+
 
 
 const MONGO_URI = process.env.MONGO_URI;
@@ -95,8 +97,8 @@ app.get("/auth/airtable/start", (req, res) => {
   const codeVerifier = crypto.randomBytes(32).toString("hex");
   const codeChallenge = crypto.createHash("sha256").update(codeVerifier).digest("base64url");
 
-  res.cookie("pkce_verifier", codeVerifier, cookieOptions());
   const state = crypto.randomUUID();
+  res.cookie("pkce_verifier", codeVerifier, cookieOptions());
   res.cookie("oauth_state", state, cookieOptions());
 
   const scopes = [
@@ -120,7 +122,7 @@ app.get("/auth/airtable/start", (req, res) => {
 
 app.get("/auth/airtable/callback", async (req, res) => {
   const { code, state } = req.query;
-
+  console.log(state)
   if (!code) return res.status(400).send("Missing authorization code");
   if (!state || state !== req.cookies.oauth_state) return res.status(400).send("Invalid state");
 

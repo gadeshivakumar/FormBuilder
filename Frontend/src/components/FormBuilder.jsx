@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/FormBuilder.css";
+import { API } from "..utils/config";
 
 export default function FormBuilder() {
   const nav = useNavigate();
@@ -15,14 +16,14 @@ export default function FormBuilder() {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    fetch("/api/auth/airtable/bases", { credentials: "include" })
+    fetch(`${API}/auth/airtable/bases`, { credentials: "include" })
       .then((r) => r.json())
       .then((d) => setBases(d.bases || []))
       .catch(() => (window.location.href = "/"));
   }, []);
 
   const fetchTables = (id) => {
-    fetch(`/api/auth/airtable/tables?base=${id}`, { credentials: "include" })
+    fetch(`${API}/auth/airtable/tables?base=${id}`, { credentials: "include" })
       .then((r) => r.json())
       .then((d) => setTables(d.tables || []));
   };
@@ -96,7 +97,7 @@ export default function FormBuilder() {
       })),
     };
 
-    const res = await fetch("/api/forms", {
+    const res = await fetch(`${API}/forms`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

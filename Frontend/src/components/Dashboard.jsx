@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./CSS/Dashboard.css";
-
+import { API } from "..utils/config";
 function Dashboard() {
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
@@ -9,7 +9,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/auth/airtable/profile", {
+    fetch(`${API}/auth/airtable/profile`, {
       credentials: "include",
     })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
@@ -20,7 +20,7 @@ function Dashboard() {
   useEffect(() => {
     if (!profile?.id) return;
 
-    fetch(`/api/search/forms?owner=${profile.id}`, {
+    fetch(`${API}/search/forms?owner=${profile.id}`, {
       credentials: "include",
     })
       .then((r) => r.json())
