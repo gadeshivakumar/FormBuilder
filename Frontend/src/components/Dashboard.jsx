@@ -9,16 +9,21 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API}/auth/airtable/profile`, {
-      credentials: "include",
-    })
+  const load = () => {
+    fetch(`${API}/auth/airtable/profile`, { credentials: "include" })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => setProfile(data))
-      .catch(() => navigate("/"));
-  }, []);
+      .catch(() => {
+        setTimeout(load, 300);  // <-- retry after cookie becomes available
+      });
+  };
+
+  load();
+}, []);
+
 
   useEffect(() => {
-    if (!profile?.id) return;
+    if (!profile?.id) return <p>Loading...</p>;
 
     fetch(`${API}/search/forms?owner=${profile.id}`, {
       credentials: "include",
