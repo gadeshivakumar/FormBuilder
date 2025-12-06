@@ -46,7 +46,7 @@ function cookieOptions() {
   const secure = process.env.NODE_ENV === "production";
   return {
     httpOnly: true,
-    sameSite: secure ? "none" : "lax",
+    sameSite: secure ? "None" : "lax",
     secure:secure,
     path: "/",
   };
