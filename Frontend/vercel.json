@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://form-builder-backend-u2m6.onrender.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
