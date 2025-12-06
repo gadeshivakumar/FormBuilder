@@ -23,7 +23,8 @@ const corsOrigins = new Set([FRONTEND_ORIGIN, "https://airtable.com"]);
 
 app.use(
   cors({
-    origin: "https://form-builder-pearl-one.vercel.app",
+    origin: ["https://form-builder-pearl-one.vercel.app",
+      "https://form-builder-backend-u2m6.onrender.com"],
     credentials: true,
   })
 );
