@@ -7,14 +7,15 @@ function Dashboard() {
   const [profile, setProfile] = useState(null);
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [navigator,useNavigator]=useNavigate();
   useEffect(() => {
   const load = () => {
     fetch(`${API}/auth/airtable/profile`, { credentials: "include" })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => setProfile(data))
-      .catch(() => {
-        setTimeout(load, 300); 
+      .catch((err) => {
+        console.log("err");
+        navigator("/");
       });
   };
 
