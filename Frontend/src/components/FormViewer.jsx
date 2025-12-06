@@ -104,7 +104,7 @@ export default function FormViewer() {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}`)
+    fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}`,{credentials:"include"})
       .then((r) => r.json())
       .then((d) => setForm(d))
       .catch(() => setForm(null));
@@ -130,6 +130,7 @@ export default function FormViewer() {
 
     const r = await fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}/submit`, {
       method: "POST",
+      credentials:"include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ answers }),
     });
