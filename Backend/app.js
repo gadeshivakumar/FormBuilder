@@ -25,10 +25,13 @@ app.use(
   cors({
     origin: [
       "https://form-builder-pearl-one.vercel.app",
+      "https://form-builder-backend-u2m6.onrender.com",
+      "http://localhost:5173",
     ],
     credentials: true,
   })
 );
+
 
 const MONGO_URI = process.env.MONGO_URI;
 mongoose
@@ -44,7 +47,6 @@ function cookieOptions() {
     secure: isProd, 
     sameSite: "none",
     path: "/",
-    domain: isProd ? "form-builder-pearl-one.vercel.app" : "localhost",
   };
 }
 
@@ -129,7 +131,7 @@ app.get("/auth/airtable/callback", async (req, res) => {
     const data = new URLSearchParams({
       grant_type: "authorization_code",
       code,
-      redirect_uri: process.env.AIRTABLE_REDIRECT_URI,
+      redirect_uri: process.env.AIRTABLE_REDIRECT_URI.trim(),
       code_verifier: codeVerifier,
     });
 
