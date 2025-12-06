@@ -18,7 +18,7 @@ function Dashboard() {
         navigator("/");
       });
   };
-
+  console.log("hey finally")
   load();
 }, []);
 
