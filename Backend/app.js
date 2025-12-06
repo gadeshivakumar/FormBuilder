@@ -35,7 +35,7 @@ app.use(
   })
 );
 
-app.options("*", cors({ origin: (o, cb) => cb(null, corsOrigins.has(o) ? true : false), credentials: true }));
+app.options("/*", cors({ origin: (o, cb) => cb(null, corsOrigins.has(o) ? true : false), credentials: true }));
 
 
 const MONGO_URI = process.env.MONGO_URI;
