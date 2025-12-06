@@ -194,7 +194,10 @@ app.get("/auth/airtable/callback", async (req, res) => {
 
 app.get("/auth/airtable/profile", async (req, res) => {
   const token = req.cookies.token;
-  if (!token) return res.status(401).send({ error: "Not logged in" });
+  if (!token){
+    console.log("came here ")
+    return res.status(401).send({ error: "Not logged in" });
+  }
 
   try {
     const response = await axios.get("https://api.airtable.com/v0/meta/whoami", {

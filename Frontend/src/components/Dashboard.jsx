@@ -14,7 +14,7 @@ function Dashboard() {
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => setProfile(data))
       .catch(() => {
-        setTimeout(load, 300);  // <-- retry after cookie becomes available
+        setTimeout(load, 300); 
       });
   };
 
