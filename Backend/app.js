@@ -89,7 +89,7 @@ function validateAnswers(form, answers) {
 
 
 app.get("/auth/airtable/start", (req, res) => {
-  const redirectUri = process.env.AIRTABLE_REDIRECT_URI;
+  const redirectUri = process.env.AIRTABLE_REDIRECT_URI.trim();
   const codeVerifier = crypto.randomBytes(32).toString("hex");
   const codeChallenge = crypto.createHash("sha256").update(codeVerifier).digest("base64url");
 
