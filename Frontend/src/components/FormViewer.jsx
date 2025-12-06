@@ -104,7 +104,7 @@ export default function FormViewer() {
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}`,{credentials:"include"})
+    fetch(`/api/forms/${id}`,{credentials:"include"})
       .then((r) => r.json())
       .then((d) => setForm(d))
       .catch(() => setForm(null));
@@ -128,7 +128,7 @@ export default function FormViewer() {
 
     setStatus("Submitting...");
 
-    const r = await fetch(`https://form-builder-backend-u2m6.onrender.com/forms/${id}/submit`, {
+    const r = await fetch(`/api/forms/${id}/submit`, {
       method: "POST",
       credentials:"include",
       headers: { "Content-Type": "application/json" },
