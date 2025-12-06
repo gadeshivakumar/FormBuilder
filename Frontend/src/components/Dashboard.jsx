@@ -66,7 +66,7 @@ function Dashboard() {
         {!forms.length && <p>No forms created yet.</p>}
 
         {forms.map((f) => {
-          const url = `http://localhost:5173/f/${f._id}`;
+          const url = `https://form-builder-pearl-one.vercel.app/f/${f._id}`;
           return (
             <div key={f._id} className="form-item">
               <p>
