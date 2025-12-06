@@ -18,6 +18,11 @@ app.use(bodyParser.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.set("trust proxy", 1);
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
 const corsOrigins = new Set([FRONTEND_ORIGIN, "https://airtable.com"]);
 
@@ -25,13 +30,12 @@ app.use(
   cors({
     origin: [
       "https://form-builder-pearl-one.vercel.app",
+      "https://form-builder-backend-u2m6.onrender.com",
       "http://localhost:5173",
     ],
     credentials: true,
   })
 );
-
-
 
 
 
@@ -400,19 +404,7 @@ app.get("/forms", async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
 
     if (new Date() > user.tokenExpiresAt) {
-      // const params = new URLSearchParams({
-      //   grant_type: "refresh_token",
-      //   refresh_token: user.refreshToken,
-      //   client_id: process.env.AIRTABLE_CLIENT_ID,
-      //   client_secret: process.env.AIRTABLE_CLIENT_SECRET,
-      // });
-
-      // const refreshResponse = await axios.post(
-      //   "https://airtable.com/oauth2/v1/token",
-      //   params.toString(),
-      //   { headers: { "Content-Type": "application/x-www-form-urlencoded" } }
-      // );
-
+      
       const params = new URLSearchParams({
         grant_type: "refresh_token",
         refresh_token: user.refreshToken,
