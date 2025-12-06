@@ -17,18 +17,26 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.set("trust proxy", 1);
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
 
-const corsOrigins = [FRONTEND_ORIGIN, "https://airtable.com"];
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
+const corsOrigins = new Set([FRONTEND_ORIGIN, "https://airtable.com"]);
+
 app.use(
   cors({
     origin: (origin, cb) => {
       if (!origin) return cb(null, true);
-      cb(null, corsOrigins.includes(origin));
+      if (corsOrigins.has(origin)) return cb(null, true);
+      cb(new Error("CORS origin not allowed"));
     },
     credentials: true,
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+    preflightContinue: false
   })
 );
+
+app.options("*", cors({ origin: (o, cb) => cb(null, corsOrigins.has(o) ? true : false), credentials: true }));
+
 
 const MONGO_URI = process.env.MONGO_URI;
 mongoose
@@ -41,7 +49,7 @@ function cookieOptions() {
   return {
     httpOnly: true,
     sameSite: secure ? "none" : "lax",
-    secure,
+    secure:secure,
     path: "/",
   };
 }
@@ -184,10 +192,16 @@ app.get("/auth/airtable/profile", async (req, res) => {
 
     return res.send(response.data);
   } catch (err) {
+    const status = err.response?.status;
     console.error("PROFILE ERR:", err.response?.data || err.message);
+
+    if (status === 401 || status === 403) {
+      return res.status(401).send({ error: "Authentication invalid or expired" });
+    }
     return res.status(500).send({ error: "Failed to load profile" });
   }
 });
+
 
 app.get("/auth/airtable/bases", async (req, res) => {
   const token = req.cookies.token;
