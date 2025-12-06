@@ -24,16 +24,15 @@ const corsOrigins = new Set([FRONTEND_ORIGIN, "https://airtable.com"]);
 app.use(
   cors({
     origin: (origin, cb) => {
-      if (!origin) return cb(null, true);
-      if (corsOrigins.has(origin)) return cb(null, true);
-      cb(new Error("CORS origin not allowed"));
+      if (!origin || corsOrigins.has(origin)) cb(null, true);
+      else cb(new Error("Not allowed by CORS"));
     },
     credentials: true,
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-    preflightContinue: false
   })
 );
+
 
 app.options("/*", cors({ origin: (o, cb) => cb(null, corsOrigins.has(o) ? true : false), credentials: true }));
 
